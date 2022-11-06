@@ -1,0 +1,585 @@
+# Importing part
+import webbrowser
+import pyttsx3   # pip install pyttsx3
+import speech_recognition as sr  # pip install SpeechRecognition
+import datetime  # pip install DateTime
+import wikipedia  # pip install wikipedia
+import pywhatkit as kit  # pip install pywhatkit    pip install Flasks
+from googletrans import Translator  # pip install googletrans
+import time
+import requests 
+import os
+import random
+from tkinter import *
+from tkinter.ttk import *
+from time import strftime
+from pynput.keyboard import Controller    # pip install pynput
+
+
+# variable part
+
+Harry_count = 0
+count = 0
+faces = ['Head', 'Tail']
+listener = sr.Recognizer()
+translator = Translator()
+API_KEY = "f610b2191c27c4215a44c464963c6e0d"
+BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
+
+# Correcting pyttsx (do never change)
+engine = pyttsx3.init('sapi5')
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[0].id)
+
+
+# Deffining 'Speak' part
+def speak(audio):
+    engine.say(audio)
+    engine.runAndWait()
+
+
+# Deffining 'Wish Me' part
+def wishMe():
+
+    hour = int(datetime.datetime.now().hour)
+
+    if hour >= 0 and hour < 12:
+        speak("Good Morning!!!")
+
+    elif hour >= 12 and hour < 18:
+        speak("Good Afternoon!!!")
+
+    else:
+        speak("Good Evening!!!")
+
+    speak("I am Harry, How may I help you?")
+
+
+# Deffining 'Take command' part
+def takeCommand():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("\n")
+        print("Listening...")
+        r.pause_threshold = 2
+        audio = r.listen(source)
+
+    try:
+        print("Recognizing...")
+        query = r.recognize_google(audio, language='en-in')
+        print(f"User said:- {query}\n")
+
+    except Exception as e:
+        print("Say that again please...")
+        speak("Please repeat!!!")
+        return "None"
+    return query
+
+
+# Defining 'watch' part
+def watch():
+    string = strftime('%H:%M:%S %p')
+    label.config(text=string)
+    label.after(1000, watch)
+
+
+# Defining 'whatCanIdo' part
+def whatCanIdo():
+    print("You can do things like:-")
+    speak("You can do things like:-")
+    print("    1. Search anything on youtube")
+    speak("Search anything on youtube")
+    print("    2. Search anything on wikipedia")
+    speak("Search anything on wikipedia")
+    print("    3. Open any website")
+    speak("Open any website")
+    print("    4. Play any music from youtube ")
+    speak("Play any music from youtube")
+    print("    5. Open apps")
+    speak("Open apps")
+    print("    6. Ask for the time")
+    speak("Ask for the time")
+    print("    7. Open folders")
+    speak("Open folders")
+    print("    8. Open files")
+    speak("Open files")
+    print("    9. You can play games like:-")
+    speak("You can play games like:-")
+    print("        A. Computer quizz")
+    speak("Computer quizz")
+    print("        B. Guess the number")
+    speak("Guess the number")
+    print("        C. Rock, Paper, Scissor")
+    speak("Rock, Paper, Scissor")
+    print("        D. Snake game")
+    speak("Snake game")
+    print("And many more!!")
+    speak("And many more")
+    time.sleep(5)
+
+
+# Executing Program and Main part of the Program
+if __name__ == "__main__":
+
+    wishMe()
+
+    while True:
+        query = takeCommand().lower()
+
+        # if 'harry' in query:
+
+        if 'help' in query:
+            whatCanIdo()
+
+        elif 'between us' in query:
+            webbrowser.open("www.betweenus.in/Parent/Default.aspx")
+
+        elif 'wikipedia' in query:
+            speak('Searching Wikipedia...')
+            query = query.replace("wikipedia", "")
+            results = wikipedia.summary(query, sentences=1)
+            print(results)
+            speak(results)
+
+        elif 'youtube' in query:
+            while True:
+                time.sleep(2)
+                listener = sr.Recognizer()
+                search = "What do you want to watch or listen:- "
+                answer = print(search)
+                speak("What do you want to watch or listen:")
+                time.sleep(3)
+                try:
+                    with sr.Microphone() as source:
+                        print('listening...')
+                        voice = listener.listen(source)
+                        info = listener.recognize_google(voice)
+                        print("")
+                        print('opening...')
+                        time.sleep(2)
+                        kit.playonyt(info)
+                        print("")
+                        time.sleep(5)
+                        print("Completed!")
+                        print("")
+                        time.sleep(3)
+                        break
+                except:
+                    pass
+            key = Controller()
+            key.press('f')
+            key.release('f')
+
+        elif 'omegle' in query:
+            webbrowser.open("www.omegle.com/")
+
+        elif 'full' in query:
+            key = Controller()
+            key.press('f')
+            key.release('f')
+
+        elif 'spotify' in query:
+            webbrowser.open("open.spotify.com/")
+
+        elif 'pypi' in query:
+            webbrowser.open("pypi.org")
+
+        elif 'likes' in query:
+            webbrowser.open(
+                "https://www.youtube.com/watch?v=B7xai5u_tnk&list=PLe4idGSueDzPNy-xJ5zDMMd5AIGu5VgFl&index=1")
+            time.sleep(5)
+            key = Controller()
+            key.press('f')
+            key.release('f')
+            quit()
+
+        elif 'life' in query:
+            webbrowser.open(
+                "https://www.youtube.com/watch?v=B7xai5u_tnk&list=PLe4idGSueDzPNy-xJ5zDMMd5AIGu5VgFl&index=1")
+            time.sleep(3)
+            key = Controller()
+            key.press('f')
+            key.release('f')
+            quit()
+
+        elif 'time' in query:
+            root = Tk()
+            root.title("Time")
+            label = Label(root, font=("ds-digital", 80),
+                          background="black", foreground="cyan")
+            label.pack(anchor='center')
+            watch()
+            print("Note:- Close the Time app to continue")
+            speak("Close the Time app to continue")
+            mainloop()
+            time.sleep(2)
+
+        elif 'code' in query:
+            codePath = "C:\\Users\\user\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+            os.startfile(codePath)
+
+        elif 'whatsapp' in query:
+            codePath = "C:\\ProgramData\\user\\WhatsApp\\WhatsApp.exe"
+            os.startfile(codePath)
+
+        elif 'thank you' in query:
+            speak("Sir, I am always here to help, Welcome! ")
+
+        elif 'python programs' in query:
+            codePath = "D:\\1. Programs\\2. Python\\1. Programs"
+            os.startfile(codePath)
+
+        elif 'html programs' in query:
+            codePath = "D:\\1. Programs\\3. HTML\\1. Projects"
+            os.startfile(codePath)
+
+        elif 'programs' in query:
+            codePath = "D:\\1. Programs"
+            os.startfile(codePath)
+
+        elif 'python' in query:
+            codePath = "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python310\\python.exe "
+            os.startfile(codePath)
+
+        elif 'good morning' in query:
+            hour = int(datetime.datetime.now().hour)
+            if hour >= 0 and hour < 12:
+                speak("Good Morning!!!")
+
+            elif hour >= 12 and hour < 18:
+                speak("Good Afternoon!!!")
+
+            else:
+                speak("Good Evening!!!")
+
+        elif 'good afternoon' in query:
+            hour = int(datetime.datetime.now().hour)
+            if hour >= 0 and hour < 12:
+                speak("Good Morning!!!")
+
+            elif hour >= 12 and hour < 18:
+                speak("Good Afternoon!!!")
+
+            else:
+                speak("Good Evening!!!")
+
+        elif 'good evening' in query:
+            hour = int(datetime.datetime.now().hour)
+            if hour >= 0 and hour < 12:
+                speak("Good Morning!!!")
+
+            elif hour >= 12 and hour < 18:
+                speak("Good Afternoon!!!")
+
+            else:
+                speak("Good Evening!!!")
+
+        elif 'good night' in query:
+            hour = int(datetime.datetime.now().hour)
+            if hour >= 0 and hour < 12:
+                speak("Good Morning!!!")
+
+            elif hour >= 12 and hour < 18:
+                speak("Good Afternoon!!!")
+
+            else:
+                speak("Good Evening!!!")
+
+        elif 'hello' in query:
+            speak("Hello sir, nice talking to you")
+            time.sleep(2)
+
+        elif 'hai' in query:
+            speak('Hi there')
+            time.sleep(2)
+
+        elif 'age' in query:
+            codePath = "F:\\more\\Project\\1. Python\\Chek your Age\\main.py"
+            os.startfile(codePath)
+
+        elif 'calculator' in query:
+            codePath = "F:\\more\\Project\\1. Python\\Calculator\\main.py"
+            os.startfile(codePath)
+
+        elif 'computer quizz' in query:
+            codePath = "F:\\more\\Project\\1. Python\\Simple Computer Quizz (game)\\main.py"
+            os.startfile(codePath)
+
+        elif 'coin' in query:
+
+            time.sleep(2)
+            speak("Opening flip a coin")
+            time.sleep(2)
+
+            print('Flipping the coin, wait  🔄')
+            speak("Flipping the coin, wait ")
+            time.sleep(3)
+            print('')
+            face = random.choice(faces)
+            print('You got  ' + face)
+            speak('You got  ' + face)
+            time.sleep(2)
+
+        elif 'google' in query:
+            time.sleep(1)
+            print('opening Search google')
+            speak("opening Search google")
+            time.sleep(3)
+            speak("what do you want to search...")
+            answer = input(">>>")
+            kit.search(answer)
+            time.sleep(3)
+            print("completed!!!")
+            speak("completed!!!")
+            time.sleep(2)
+            print("\n")
+
+        elif 'guess the number' in query:
+            time.sleep(3)
+
+            computer_guess = random.randint(1, 10)
+            guess = 0
+
+            while guess != computer_guess:
+
+                guess = int(input('Enter a number:- '))
+
+                if guess > computer_guess:
+                    print('Sorry, your guess is too high')
+
+                elif guess < computer_guess:
+                    print('Sorry, your guess is too low')
+
+                elif guess == computer_guess:
+                    print('Correct guess!')
+
+            time.sleep(3)
+
+        elif 'guess the person' in query:
+            codePath = "F:\\more\\Project\\1. Python\\Guess the person\\main.py"
+            os.startfile(codePath)
+
+        elif 'hangman' in query:
+            codePath = "F:\\more\\Project\\1. Python\\Hangman.py\\Hangman.py"
+            os.startfile(codePath)
+
+        elif 'orderwise calc' in query:
+            codePath = "F:\\more\\Project\\1. Python\Orderwise (number) calc\\main.py"
+            os.startfile(codePath)
+
+        elif 'map' in query:
+            codePath = "https://www.google.co.in/maps/dir/12.4167704,76.6990166//@12.416852,76.663997,13z/data=!3m1!4b1!4m4!4m3!1m1!4e1!1m0"
+            webbrowser.open(codePath)
+
+        elif 'password' in query:
+
+            time.sleep(1)
+            speak("Alright! opening passwords for you!!!")
+            time.sleep(3)
+
+            while True:
+                enter = input("Enter the pin to view the passwords:- ")
+                if enter == '1212':
+                    print("\n")
+                    print("Correct pin!")
+                    time.sleep(3)
+                    print('Passwords:- ')
+                    time.sleep(2)
+                    print(' 1. Broadband = qUark@32')
+                    time.sleep(2)
+                    print(' 2. PC = qUassi@12')
+                    time.sleep(2)
+                    print(' 3. Mobile = 1212')
+                    time.sleep(2)
+                    print(' 4. Google account = qUassi@12')
+                    time.sleep(2)
+                    print(' 5. Microsoft account = qUassi@12')
+                    time.sleep(2)
+                    break
+
+                else:
+                    print('Wrong pin!')
+                    count += 1
+
+                if count >= 5:
+                    print('')
+                    print('You have no tries left')
+                    break
+
+                else:
+                    pass
+
+        elif 'pyworld' in query:
+            codePath = "F:\\more\\Project\\1. Python\\PyWorld (IDE)\\main.py"
+            os.startfile(codePath)
+
+        elif 'rock' in query:
+            codePath = "F:\\more\\Project\\1. Python\\Rock, papper and scissor (game)\\main.py"
+            os.startfile(codePath)
+
+        elif 'salary' in query:
+
+            speak("What is your basic salary?")
+            basic_salary = int(input(">>>"))
+            speak("What is your KGID deduction? :- ")
+            kgid_reduce = int(input("What is your KGID deduction? :- "))
+            speak("What is your GPF deduction? :- ")
+            gpf_reduce = int(input("What is your GPF deduction? :- "))
+            speak("What is your L I C deduction? :- ")
+            lic_reduce = int(input("What is your LIC deduction? :- "))
+            speak("What is your Income Tax deduction? :- ")
+            incometax_reduce = int(
+                input("What is your Income Tax deduction? :- "))
+            DA_calc = .2450 * basic_salary
+            HRA_calc = .08 * basic_salary
+            grass_salary = DA_calc + HRA_calc + basic_salary - kgid_reduce - \
+                gpf_reduce - incometax_reduce - lic_reduce - 200 - 360
+            print("₹", grass_salary)
+            speak(grass_salary)
+            speak("rupees is you salary.")
+            print("\n")
+            time.sleep(5)
+
+        elif 'snake game' in query:
+            codePath = "F:\\more\\Project\\1. Python\\Snake (game)\\main.py"
+            os.startfile(codePath)
+
+        elif 'speech to text' in query:
+            put = input('Do you want to type or talk:- ')
+            if put == 'type':
+                answer = input('Type the text to be saved:- ')
+                print("Text '" + answer + "' has been saved")
+                file = open("document.txt", 'a')
+                file.write('method - type: ' + '\n' + answer + '\n' + '\n')
+                file.close()
+            elif put == 'talk':
+                try:
+                    with sr.Microphone() as source:
+                        print('listening...')
+                        voice = listener.listen(source)
+                        info = listener.recognize_google(voice)
+                        print("Text ' " + info + "' has been saved")
+                        file = open("document.txt", 'a')
+                        file.write('method - talk: ' +
+                                   '\n' + info + '\n' + '\n')
+                        file.close()
+
+                except:
+                    pass
+            else:
+                print('Sorry not defined')
+
+        elif 'student information' in query:
+            codePath = "F:\\more\\Project\\1. Python\\Student Information\\main.py"
+            os.startfile(codePath)
+
+        elif 'timer' in query:
+            codePath = "F:\more\Project\1. Python\Timer\main.py"
+            os.startfile(codePath)
+
+        elif 'translator' in query:
+            out = translator.translate(
+                input("Enter the text:- "), dest=input("Enter the language:- "))
+            print(out.text)
+            input("Do you want me to read it?")
+            speak("Do you want me to read it?")
+            if input == 's' or "yes":
+                speak(out.text)
+            else:
+                pass
+
+        elif 'weather' in query:
+            speak("Enter you city name")
+            while True:
+                city = input("Enter your city name:-  ")
+                requests_url = f"{BASE_URL}?appid={API_KEY}&q={city}"
+                response = requests.get(requests_url)
+                if response.status_code == 200:
+                    data = response.json()
+                    weather = data["weather"][0]["description"]
+                    temp = round(data["main"]["temp"] - 273.15, 2)
+                    time.sleep(1)
+                    print("Weather:- " + weather)
+                    time.sleep(1)
+                    print("tempepature: ", temp, "celsius")
+                    time.sleep(3)
+                    print("\n")
+                    break
+                else:
+                    print("An error occurred.")
+                    time.sleep(1)
+
+        elif 'website' in query:
+            codePath = "F:\\more\\Project\\1. Python\\Website\\index.py"
+            os.startfile(codePath)
+
+        elif 'whatsapp' in query:
+
+            kit.sendwhatmsg("+91" +
+                            input(
+                                "Enter the phone number to which to want to send msg:- "),
+                            input("Enter the msg to be sent:- "),
+                            int(input(
+                                "Enter the hour in which the msg should be sent:- ")),
+                            int(input("Enter the minute in which the msg should be sent:- ")))
+
+            time.sleep(2)
+            print("")
+            print("Successfully sent!!")
+
+        elif 'stop' in query:
+            speak("ok sir! quitting!!!")
+            speak("Thanks for using me sir")
+            time.sleep(3)
+            quit()
+
+        elif 'quit' in query:
+            speak("ok sir! quitting!!!")
+            speak("Thanks for using me sir")
+            time.sleep(3)
+            quit()
+
+        else:
+            speak("Sorry! I don't know that")
+            time.sleep(2)
+
+
+
+
+
+
+
+
+
+
+    # elif 'stop' in query:
+    #     speak("ok sir! quitting!!!")
+    #     speak("Thanks for using me sir")
+    #     time.sleep(3)
+    #     quit()
+
+    # elif 'quit' in query:
+    #     speak("ok sir! quitting!!!")
+    #     speak("Thanks for using me sir")
+    #     time.sleep(3)
+    #     quit()
+
+    #     elif 'help' in query:
+    #         whatCanIdo()
+
+    #     elif 'what can I say' in query:
+    #         whatCanIdo()
+
+    #     elif 'what can i do' in query:
+    #         whatCanIdo()
+
+    #     else:
+    #         Harry_count += 1
+
+    #         if Harry_count == 5:
+    #             print("please use my name before telling the command!!!")
+    #             speak("please use my name before telling the command!!!")
+    #             # Harry_count = 0
+
+    #         else:
+    #             pass
